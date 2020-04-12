@@ -17,6 +17,22 @@ $(document).ready(function () {
     */
     $('#number').keyup(function () {
         // your code here
+        let inputNum = $("#number").val();
+        console.log("In keyup, inputnum: "+ inputNum);
+        
+        $.get("/getCheckNumber", {number: inputNum}, result=>{
+            //Exists
+            if (result){
+                $("#number").css("background-color", "red");
+                $("#error").html("Number already registered!");
+                $("#submit").prop("disabled", true);
+            }
+            else {
+                $("#number").css("background-color", "#E3E3E3");
+                $("#error").html("");
+                $("#submit").prop("disabled", false);
+            }
+        })
     });
 
     /*
@@ -32,6 +48,38 @@ $(document).ready(function () {
     */
     $('#submit').click(function () {
         // your code here
+        let name = $("#name").val();
+        let number = $("#number").val();
+
+        if (name == ""){
+            $("#name").css("background-color", "red");
+            $("#error").html("Name must not be empty!");
+            return false;
+        }
+        else {
+            $("#name").css("background-color", "");
+            $("#error").html("");
+        }
+
+        if (number == ""){
+            $("#number").css("background-color", "red");
+            $("#error").html("Number must not be empty!");
+            return false;
+        }
+        else {
+            $("#number").css("background-color", "");
+            $("#error").html("");
+        }
+
+        $.get("/add", {name: name, number: number}, result=>{
+            console.log("In get AJAX callback | result: ");
+            console.table(result)
+            $("#contacts").append(result);
+            $("#name").prop("value", "");
+            $("#number").prop("value", "");
+        })
+
+
     });
 
     /*
@@ -43,6 +91,13 @@ $(document).ready(function () {
     */
     $('#contacts').on('click', '.remove', function () {
         // your code here
+        let name = 
+        $.get('/delete', {name: name, number: number}, result=>{
+            if(result){
+                console.log("Deleting closest")
+                $(this).closest().remove()
+            }
+        })
     });
 
 })
